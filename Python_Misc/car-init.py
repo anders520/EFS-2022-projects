@@ -15,7 +15,7 @@ class car:
         #return self.license_plate
 
     def __str__(self):
-        return ('This car is a ' + self.brand + ' ' + self.series + ', \
+        return ('The car is a ' + self.brand + ' ' + self.series + ', \
 and its license plate number is: ' + self.license_plate)
 
     def setName(self, name):
@@ -53,7 +53,7 @@ def save_object(obj, filename):
         with open(filename, 'wb') as outp:  # (Over)writes new file.
             dill.dump(obj, outp)
 
-def open_saved_objects(obj, filename):
+def open_saved_object(obj, filename):
     saved_objects = []
     found = False
     with open(str(filename), 'rb') as inp:
@@ -68,6 +68,12 @@ def open_saved_objects(obj, filename):
                 found = True
         if found == False:
             print("cannot find object...")
+
+def find_car():
+    f = str(input("Do you want to find your car data?(y/n)... "))
+    if f.lower() == 'y':
+        cn = str(input("What's the name of your car? "))
+        open_saved_object(cn, 'car_data.pkl')
     
 ask()
 

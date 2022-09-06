@@ -68,7 +68,7 @@ PURPOSE OF THIS MODULE:
     """
 
 # The following line is used in the Tk_SOLUZION_Client and the IDLE_Text_SOLUZION_Client.
-problem_name = 'Missionaries'
+problem_name = 'InstantInsanity'
 
 def client_mainloop():
   print(TITLE)

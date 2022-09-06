@@ -1,0 +1,105 @@
+How-to-Pose-for-TkS.txt
+
+I. INTRODUCTION
+
+This document is intended for students who are developing problem
+formulations and games as part of their studies of problem solving
+techniques.  The Tk_SOLUZION client provides support for testing out
+problem formulations that include not only the usual textual
+descriptions of states and operators, but some simple graphics.  There
+are two main limitations of this client, compared with the BRIFL
+approach -- single-user solving and graphics constrained to 2-D array
+structure.  On the other hand, it is easy to use the Tk_SOLUZION
+client. Unlike the Flask-client- server framework, we don't need
+Linux, virtual hosts, Javascript, SVG, svgwrite, or browser-based
+debugging.
+
+When formulating a problem for the Tk_SOLUZION client, there are two
+main parts: (a) standard SOLUZION formulation of common code, states,
+and operators, and (b) creating the visualizations of states.
+
+This document focuses on part (b), the creation of visualizations
+of states.  In order to make it easy to get a colorful and informative
+visualization up on the screen, we'll make a simplying assumption:
+the visualization will be expressed as a two-dimensional array of
+colors and textual strings.  
+
+II. TECHNICAL REQUIREMENTS
+
+The Tk_SOLUZION client operates in a standard Python environment
+that includes Tkinter.  You get this by default when you install
+Python with IDLE from www.python.org.  Tkinter is a built-in framework
+handling both graphics and user interaction in Python.  We use the
+graphics capability of Tkinter in the Tk_SOLUZION client, but we
+do not use its interactive capabilities such as buttons and menus.
+Rather, the input side of interaction is handled using normal Python
+text input and text printing. 
+
+In order to make it very easy to learn and use the graphics part of
+the Tk_SOLUZION client, a special file has been written that sets
+up a visualization window for your problem formulation.  The file
+is named show_state_array.py.   There is an example of using this
+file for the Missionaries and Cannibals problem: 
+Missionaries_ARRAY_VIS_FOR_TK.py
+A good way to start your own visualization program would be to
+make a copy of Missionaries_ARRAY_VIS_FOR_TK.py and delete the
+parts of it that don't have to do with your problem, such as
+the specific color definitions.  Your file with a name like
+Myproblem_ARRAY_VIS_FOR_TK.py should also provide implementations
+of the functions initialize_vis and render_state.
+The latter function should create an instance of the class
+state_array and then it should invoke the .show() method of
+that instance.  
+
+In order to create an instance of state_array, your file imports
+state_array from show_state_array.  It calls state_array to
+construct an instance.  The various parameters to state_array
+are described in the file show_state_array.py.  The most 
+important of these is the color_array parameter.  This should
+be a Python list of lists, where each element is a tuple that
+represents a color in RGB format.  For example (255,0,0) represents
+red.
+
+The other parameters for state_array are optional, because there
+are default values given that will be used if you don't override
+them with values of your own.  Perhaps the most useful of these
+parameters is string_array.  This array should be a Python list
+of lists, with the same dimensions as color_array, but where
+each element is a string.  When your visualization is displayed,
+these strings will automatically be shown centered within the
+colored rectangles of the drawn array.
+
+As the example in Missionaries_ARRAY_VIS_FOR_TK.py shows, there
+are also options to change the font and add a caption to the
+display.  To change the font, do the same thing that is done
+in Missionaries_ARRAY_VIS_FOR_TK.py to create a new font the
+first time render_state is called.  To add a caption, simply
+include your new caption as the value of "caption=" in the
+call to state_array, again using Missionaries_ARRAY_VIS_FOR_TK.py
+as an example.
+
+Note that you can control the width and height of your visualization
+array, and thus you also have control over the size of each cell of
+the array, as well as its aspect ratio.  If you need to fit more
+text into the cells of the array, you can create a font of a smaller
+size and/or increase the size of each cell of the array.  If you
+have very large strings to display in the array cells, it might be
+better to display a short code like "See note 7" and then include
+in the caption a paragraph that begins "Note 7:" and continues with
+the details you want associated with the array cell.
+
+III. GOING FURTHER
+
+In theory, you can create very rich and general visualizations using
+this array-based method, for example by creating arrays with many, many
+cells.  At some point, this would become rather awkward, and at that
+point it might be better to learn more about Tkinter and create your
+own graphics window with a canvas and whatever geometric shapes you
+like.  However, you can avoid dealing with the extra layer of software
+specs needed for general Tkinter use by sticking with the relatively
+simple 2D array method offered here.
+
+
+
+
+--S. Tanimoto, August 11, 2017
