@@ -95,7 +95,7 @@ class gameState:
     else:
         grainSide = 'Left'
 
-    if boatLocation == 1:
+    if boatInt == 1:
         boatSide = 'Right'
     else:
         boatSide = 'Left'
