@@ -68,7 +68,7 @@ PURPOSE OF THIS MODULE:
     """
 
 # The following line is used in the Tk_SOLUZION_Client and the IDLE_Text_SOLUZION_Client.
-problem_name = 'Fish-and-O-B'
+problem_name = 'Biodiversity Project\Fish-and-O-B'
 
 def client_mainloop():
   print(TITLE)
@@ -84,10 +84,7 @@ def client_mainloop():
     print("\nStep "+str(STEP)+", Depth "+str(DEPTH))
     print("CURRENT_STATE = "+str(CURRENT_STATE))
     if CURRENT_STATE.is_goal():
-      print('''CONGRATULATIONS!
-You have solved the problem by reaching a goal state.
-Do you wish to continue exploring?
-''')
+      print(CURRENT_STATE.goal_message())
       answer = input("Y or N? >> ")
       if answer=="Y" or answer=="y": print("OK, continue")
       else: return
@@ -194,7 +191,7 @@ problem_name = sys.argv[1]
 print("problem_name = "+problem_name)
 
 try:
-  spec = importlib.util.spec_from_file_location(problem_name, "Biodiversity Project\\"+problem_name+".py")
+  spec = importlib.util.spec_from_file_location(problem_name, problem_name+".py")
   PROBLEM = spec.loader.load_module()
   spec.loader.exec_module(PROBLEM)
 except Exception as e:
@@ -203,7 +200,7 @@ except Exception as e:
 
 try:
   spec = importlib.util.spec_from_file_location(problem_name+'_Array_VIS_FOR_TK',
-                                                "Biodiversity Project\\"+problem_name+'_Array_VIS_FOR_TK.py')
+                                                problem_name+'_Array_VIS_FOR_TK.py')
   VIS = spec.loader.load_module()
   spec.loader.exec_module(VIS)
   print("Using TK vis routine")

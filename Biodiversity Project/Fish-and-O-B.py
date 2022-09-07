@@ -13,56 +13,80 @@ class State:
     def __init__(self, old=None):
         self.biodiversityScore = 100
         self.money = 0
-        self.fish1Num = 100
-        self.fish2Num = 100
+        self.codNum = 100
+        self.herringNum = 100
+        self.roundsLeft = 12
         if not old is None:
             self.biodiversityScore = old.biodiversityScore
             self.money = old.money
-            self.fish1Num = old.fish1Num
-            self.fish2Num = old.fish2Num
+            self.codNum = old.codNum
+            self.herringNum = old.herringNum
+            self.roundsLeft = old.roundsLeft
 
 
-    def can_move(self, fish1, fish2):
+    def can_move(self, method):
+        if method != 0 and self.codNum <= 0 and self.herringNum <= 0:
+            return False
         return True
     
 
-    def move(self,fish1,fish2, method):
+    def move(self, method):
         #Creates a new state if it is legal
         newState = State(old=self) # Make a copy of the current state.
-        if method == 0:
-          fish1inOcean = max(self.fish1Num - r.randint(20, 30), 0)
-          fish2inOcean = max(self.fish2Num - r.randint(20, 30), 0)
-        '''fish1inOcean = max(self.fish1Num - fish1, 0)
-        fish2inOcean = max(self.fish2Num - fish2, 0)'''
-        newState.fish1Num = fish1inOcean
-        newState.fish2Num = fish2inOcean
+        self.roundsLeft -= 1
+        newState.roundsLeft = self.roundsLeft
+        fish1Caught = 0
+        fish2Caught = 0
+        if method == 1:
+          fish1Caught = r.randint(20, 30)
+          fish2Caught = r.randint(20, 30)
+        
+        fish1inOcean = max(self.codNum - fish1Caught, 0)
+        fish2inOcean = max(self.herringNum - fish2Caught, 0)
+        profit = ((self.codNum - fish1inOcean) * 10 + (self.herringNum - fish2inOcean) * 8)
+        fish1inOcean = int(fish1inOcean * 1.25)
+        fish2inOcean = int(fish2inOcean * 1.25)
+        newState.codNum = fish1inOcean
+        newState.herringNum = fish2inOcean
+        
+        #Calculation of Simpson's Diversity Index
+        N = (fish1inOcean + fish2inOcean)
+        nSum = fish1inOcean * (fish1inOcean - 1) + fish2inOcean * (fish2inOcean - 1)
+        if N > 1:
+          newState.biodiversityScore = int(nSum / (N * (N-1)))
+        else:
+          newState.biodiversityScore = 0
+        newState.money += profit
         return newState
 
     def describe_state(self):
         return
 
     def is_goal(self):
-        if self.fish1Num > 0 and self.fish2Num > 0:
-          return False
-        return True
+        if self.roundsLeft == 0:
+          return True
+        return False
     
     def __eq__(self, s2):
         if s2==None: return False
         if self.money != s2.money: return False
         if self.biodiversityScore != s2.biodiversityScore: return False
-        if self.fish1Num != s2.fish1Num: return False
-        if self.fish2Num != s2.fish2Num: return False
+        if self.codNum != s2.codNum: return False
+        if self.herringNum != s2.herringNum: return False
         return True
 
     def __str__(self):
-      currentState = '('+str(self.money)
-      currentState += ','+str(self.biodiversityScore)
-      currentState += ','+str(self.fish1Num)
-      currentState += ','+str(self.fish2Num)+')'
+      currentState = '(Profit: '+str(self.money)
+      currentState += ', Biodiversity Index: '+str(self.biodiversityScore)
+      currentState += ', cod left: '+str(self.codNum)
+      currentState += ', herring left: '+str(self.herringNum)+')'
       return currentState
 
     def __hash__(self):
       return (str(self)).__hash__()
+    
+    def goal_message(self):
+      return "You have completed the game!"
 
 def copy_state(s):
   return State(old=s)
@@ -85,9 +109,13 @@ INITIAL_STATE = State()
 #</INITIAL_STATE>
 
 #<OPERATORS>
-phi0 = Operator("Using a net for more than one fish species",
-  lambda s: s.can_move(25, 25),
-  lambda s: s.move(r.randint(20, 30), r.randint(20, 30), 0))
+phi0 = Operator("Do nothing",
+  lambda s: s.can_move(0),
+  lambda s: s.move(0))
 
-OPERATORS = [phi0]
+phi1 = Operator("Using a net for more than one fish species",
+  lambda s: s.can_move(1),
+  lambda s: s.move(1))
+
+OPERATORS = [phi0, phi1]
 #</OPERATORS>
