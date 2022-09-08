@@ -1,6 +1,6 @@
 #<METADATA>
 SOLUZION_VERSION = "0.2"
-PROBLEM_NAME = "Fish-and-O-B"
+PROBLEM_NAME = "FishFrenzy"
 PROBLEM_VERSION = "1.0"
 AUTHORS = ['Anders C.', 'Dawson H.', 'Ren C.', 'Will Z.', 'Mason C.']
 CREATION_DATE = "06-SEP-2022"
@@ -16,8 +16,11 @@ class State:
         self.codNum = 100
         self.herringNum = 100
         self.roundsLeft = 12
+        self.biodiversityIndex = 1
+        
         if not old is None:
             self.biodiversityScore = old.biodiversityScore
+            self.biodiversityIndex = old.biodiversityIndex
             self.money = old.money
             self.codNum = old.codNum
             self.herringNum = old.herringNum
@@ -53,9 +56,17 @@ class State:
         N = (fish1inOcean + fish2inOcean)
         nSum = fish1inOcean * (fish1inOcean - 1) + fish2inOcean * (fish2inOcean - 1)
         if N > 1:
-          newState.biodiversityScore = int(nSum / (N * (N-1)))
+          newState.biodiversityIndex = 1 - round(nSum / (N * (N-1)), 3)
         else:
-          newState.biodiversityScore = 0
+          newState.biodiversityIndex = 1.0 - 0
+        
+        fishList = [fish1inOcean, fish2inOcean]
+        speciesLeft = len(fishList)
+        scoreMultiplier = (100.0 / speciesLeft)
+        for f in fishList:
+          if f == 0:
+            speciesLeft -= 1
+        newState.biodiversityScore = (1 - newState.biodiversityIndex) * speciesLeft * scoreMultiplier
         newState.money += profit
         return newState
 
@@ -71,13 +82,15 @@ class State:
         if s2==None: return False
         if self.money != s2.money: return False
         if self.biodiversityScore != s2.biodiversityScore: return False
+        if self.biodiversityIndex != s2.biodiversityIndex: return False
         if self.codNum != s2.codNum: return False
         if self.herringNum != s2.herringNum: return False
         return True
 
     def __str__(self):
       currentState = '(Profit: '+str(self.money)
-      currentState += ', Biodiversity Index: '+str(self.biodiversityScore)
+      currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
+      currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
       currentState += ', cod left: '+str(self.codNum)
       currentState += ', herring left: '+str(self.herringNum)+')'
       return currentState
@@ -90,6 +103,23 @@ class State:
 
 def copy_state(s):
   return State(old=s)
+
+class Fish:
+  def __init__(self, price, repRate):
+    self.price = price
+    
+#tuna costs $1200
+#salmon costs $750
+#cod costs $75
+#pompano costs $10
+#halibut costs $6000
+#Striped bass costs $480
+salmon = Fish(750, 1)
+tuna = Fish(1200, 1)
+cod = Fish(75, 1)
+pompano = Fish(10, 1)
+stripedBass = Fish(480, 1)
+halibut = Fish(6000, 1)
 
 class Operator:
   def __init__(self, name, precond, state_transf):

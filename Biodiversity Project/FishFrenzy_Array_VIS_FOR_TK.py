@@ -1,6 +1,6 @@
 #Dawson Harris & Anders Choy
 
-'''Fish-and-O-B_Array_VIS_FOR_TK.py
+'''FishFrenzy_Array_VIS_FOR_TK.py
 Version of Sep. 06, 2022.
 '''
 
@@ -12,7 +12,7 @@ myFont=None
 
 WIDTH = 400
 HEIGHT = 400
-TITLE = 'Fish-and-O-B'
+TITLE = 'FishFrenzy'
 
 def initialize_vis():
   initialize_tk(WIDTH, HEIGHT, TITLE)
