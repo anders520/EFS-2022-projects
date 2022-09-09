@@ -60,6 +60,8 @@ class State:
         fish1inOcean = max(self.codNum - fish1Caught, 0)
         fish2inOcean = max(self.herringNum - fish2Caught, 0)
         profit = ((self.codNum - fish1inOcean) * 10 + (self.herringNum - fish2inOcean) * 3)
+        # we can make the reproduction mechanism better by having fish lay eggs during a certain period, 
+        # and eggs will become fish after a certain period
         fish1inOcean = int(fish1inOcean * 1.25)
         fish2inOcean = int(fish2inOcean * 1.25)
         newState.codNum = fish1inOcean

@@ -84,7 +84,10 @@ def client_mainloop():
     print("\nStep "+str(STEP)+", Depth "+str(DEPTH))
     print("CURRENT_STATE = "+str(CURRENT_STATE))
     if CURRENT_STATE.is_goal():
-      print(CURRENT_STATE.goal_message())
+      print('''CONGRATULATIONS!
+You have solved the problem by reaching a goal state.
+Do you wish to continue exploring?
+''')
       answer = input("Y or N? >> ")
       if answer=="Y" or answer=="y": print("OK, continue")
       else: return
