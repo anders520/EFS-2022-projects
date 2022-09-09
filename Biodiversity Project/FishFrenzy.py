@@ -32,12 +32,22 @@ class State:
             return False
         return True
     
+    def fishing_method(self, method):
+      if method == 0: #longlines
+        return
+      elif method == 1: #gillnets
+        return
+      elif method == 2: #purse seines
+        return
+      elif method == 3: #trawling
+        return 
+      elif method == 4: #dredges
+        return
 
     def move(self, method):
         #Creates a new state if it is legal
         newState = State(old=self) # Make a copy of the current state.
-        self.roundsLeft -= 1
-        newState.roundsLeft = self.roundsLeft
+        newState.roundsLeft = self.roundsLeft - 1
         fish1Caught = 0
         fish2Caught = 0
         if method == 1:
@@ -111,13 +121,13 @@ class Fish:
 #tuna costs $1200
 #salmon costs $750
 #cod costs $75
-#pompano costs $10
+#pompano costs $20
 #halibut costs $6000
 #Striped bass costs $480
 salmon = Fish(750, 1)
 tuna = Fish(1200, 1)
 cod = Fish(75, 1)
-pompano = Fish(10, 1)
+pompano = Fish(20, 1)
 stripedBass = Fish(480, 1)
 halibut = Fish(6000, 1)
 
