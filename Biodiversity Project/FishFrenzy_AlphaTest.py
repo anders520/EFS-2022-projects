@@ -11,7 +11,6 @@ DESC = ""
 import random as r
 class State:
     def __init__(self, old=None):
-        self.biodiversityScore = 100
         self.money = 0
         self.codNum = 100
         self.herringNum = 300
@@ -19,7 +18,6 @@ class State:
         self.biodiversityIndex = 1
         
         if not old is None:
-            self.biodiversityScore = old.biodiversityScore
             self.biodiversityIndex = old.biodiversityIndex
             self.money = old.money
             self.codNum = old.codNum
@@ -31,18 +29,6 @@ class State:
         if method != 0 and self.codNum <= 0 and self.herringNum <= 0:
             return False
         return True
-    
-    def fishing_method(self, method):
-      if method == 0: #longlines
-        return
-      elif method == 1: #gillnets
-        return
-      elif method == 2: #purse seines
-        return
-      elif method == 3: #trawling
-        return 
-      elif method == 4: #dredges
-        return
 
     def move(self, method):
         #Creates a new state if it is legal
@@ -56,6 +42,7 @@ class State:
         elif method == 2:
           fish1Caught = r.randint(20, 40)
           fish2Caught = r.randint(40, 80)
+
         
         fish1inOcean = max(self.codNum - fish1Caught, 0)
         fish2inOcean = max(self.herringNum - fish2Caught, 0)
@@ -71,15 +58,8 @@ class State:
         if N > 1:
           newState.biodiversityIndex = round(1.0 - nSum / (N * (N-1)), 3)
         else:
-          newState.biodiversityIndex = 1.0 - 0
+          newState.biodiversityIndex = 1.0
         
-        fishList = [fish1inOcean, fish2inOcean]
-        speciesLeft = len(fishList)
-        scoreMultiplier = (100.0 / speciesLeft)
-        for f in fishList:
-          if f == 0:
-            speciesLeft -= 1
-        newState.biodiversityScore = (1 - newState.biodiversityIndex) * speciesLeft * scoreMultiplier
         newState.money += profit
         return newState
 
@@ -87,7 +67,7 @@ class State:
         return
 
     def is_goal(self):
-        if self.roundsLeft == 0:
+        if self.roundsLeft <= 0:
           return True
         return False
     
@@ -103,7 +83,6 @@ class State:
     def __str__(self):
       currentState = '(Profit: '+str(self.money)
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
-      currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
       currentState += ', cod left: '+str(self.codNum)
       currentState += ', herring left: '+str(self.herringNum)+')'
       return currentState
@@ -116,23 +95,6 @@ class State:
 
 def copy_state(s):
   return State(old=s)
-
-class Fish:
-  def __init__(self, price, repRate):
-    self.price = price
-    
-#tuna costs $1200
-#salmon costs $750
-#cod costs $75
-#pompano costs $20
-#halibut costs $6000
-#Striped bass costs $480
-salmon = Fish(750, 1)
-tuna = Fish(1200, 1)
-cod = Fish(75, 1)
-pompano = Fish(20, 1)
-stripedBass = Fish(480, 1)
-halibut = Fish(6000, 1)
 
 class Operator:
   def __init__(self, name, precond, state_transf):
@@ -156,11 +118,11 @@ phi0 = Operator("Do nothing",
   lambda s: s.can_move(0),
   lambda s: s.move(0))
 
-phi1 = Operator("Using a net for more than one fish species",
+phi1 = Operator("Using gill nets to fish",
   lambda s: s.can_move(1),
   lambda s: s.move(1))
 
-phi2 = Operator("Using longlines for more than one fish species",
+phi2 = Operator("Using longlines to fish",
   lambda s: s.can_move(2),
   lambda s: s.move(2))
 
