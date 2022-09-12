@@ -11,13 +11,6 @@ DESC = ""
 import random as r
 class State:
     def __init__(self, old=None):
-        self.biodiversityScore = 100
-        self.money = 0
-        self.codNum = 100
-        self.herringNum = 300
-        self.roundsLeft = 12
-        self.biodiversityIndex = 1
-        
         if not old is None:
             self.biodiversityScore = old.biodiversityScore
             self.biodiversityIndex = old.biodiversityIndex
@@ -25,6 +18,15 @@ class State:
             self.codNum = old.codNum
             self.herringNum = old.herringNum
             self.roundsLeft = old.roundsLeft
+            self.fishList = old.fishList
+        
+        self.biodiversityScore = 100
+        self.money = 0
+        self.codNum = 100
+        self.herringNum = 300
+        self.roundsLeft = 12
+        self.biodiversityIndex = 0
+        self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
 
 
     def can_move(self, method):
@@ -41,8 +43,6 @@ class State:
         return
       elif method == 3: #trawling
         return 
-      elif method == 4: #dredges
-        return
 
     def move(self, method):
         #Creates a new state if it is legal
@@ -50,6 +50,7 @@ class State:
         newState.roundsLeft = self.roundsLeft - 1
         fish1Caught = 0
         fish2Caught = 0
+        self.fishing_method(method)
         if method == 1:
           fish1Caught = r.randint(20, 30)
           fish2Caught = r.randint(60, 80)
@@ -60,28 +61,30 @@ class State:
         fish1inOcean = max(self.codNum - fish1Caught, 0)
         fish2inOcean = max(self.herringNum - fish2Caught, 0)
         profit = ((self.codNum - fish1inOcean) * 10 + (self.herringNum - fish2inOcean) * 3)
-        # we can make the reproduction mechanism better by having fish lay eggs during a certain period, 
-        # and eggs will become fish after a certain period
-        fish1inOcean = int(fish1inOcean * 1.25)
-        fish2inOcean = int(fish2inOcean * 1.25)
-        newState.codNum = fish1inOcean
-        newState.herringNum = fish2inOcean
         
+        # A flat rate of multiplying every three rounds and cap at a high num
+        newState.fishList = self.fishList
+        if (newState.roundsLeft % 3 == 0):
+          for f in newState.fishList:
+            f.reproduce()
+        
+        #Ignore this block of code 
         #Calculation of Simpson's Diversity Index
         N = (fish1inOcean + fish2inOcean)
         nSum = fish1inOcean * (fish1inOcean - 1) + fish2inOcean * (fish2inOcean - 1)
         if N > 1:
           newState.biodiversityIndex = round(1.0 - nSum / (N * (N-1)), 3)
         else:
-          newState.biodiversityIndex = 1.0 - 0
+          newState.biodiversityIndex = 1.0
         
-        fishList = [fish1inOcean, fish2inOcean]
+        '''fishList = [fish1inOcean, fish2inOcean]
         speciesLeft = len(fishList)
         scoreMultiplier = (100.0 / speciesLeft)
         for f in fishList:
           if f == 0:
             speciesLeft -= 1
-        newState.biodiversityScore = (1 - newState.biodiversityIndex) * speciesLeft * scoreMultiplier
+        newState.biodiversityScore = (1 - newState.biodiversityIndex) * speciesLeft * scoreMultiplier'''
+        
         newState.money += profit
         return newState
 
@@ -106,8 +109,9 @@ class State:
       currentState = '(Profit: '+str(self.money)
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
-      currentState += ', cod left: '+str(self.codNum)
-      currentState += ', herring left: '+str(self.herringNum)+')'
+      for fish in self.fishList:
+        currentState += ', ' + fish.name +' left: '+str(fish.number)
+      currentState += ')'
       return currentState
 
     def __hash__(self):
@@ -120,21 +124,22 @@ def copy_state(s):
   return State(old=s)
 
 class Fish:
-  def __init__(self, price, repRate):
+  def __init__(self, name, price, number, repRate):
+    self.name = name
     self.price = price
+    self.number = number
+    self.repRate = repRate
+
+  def reproduce(self):
+    if self.number < 6000:
+      self.number += (self.number * self.repRate)
     
-#tuna costs $1200
-#salmon costs $750
-#cod costs $75
-#pompano costs $20
-#halibut costs $6000
-#Striped bass costs $480
-salmon = Fish(750, 1)
-tuna = Fish(1200, 1)
-cod = Fish(75, 1)
-pompano = Fish(20, 1)
-stripedBass = Fish(480, 1)
-halibut = Fish(6000, 1)
+salmon = Fish('salmon', 750, 150, 1.5)
+tuna = Fish('tuna', 1200, 100, 1.5)
+cod = Fish('cod', 75, 1000, 1.5)
+pompano = Fish('pompano', 20, 3000, 1.5)
+stripedBass = Fish('striped bass', 480, 500, 1.5)
+halibut = Fish('halibut', 6000, 20, 1.5)
 
 class Operator:
   def __init__(self, name, precond, state_transf):
