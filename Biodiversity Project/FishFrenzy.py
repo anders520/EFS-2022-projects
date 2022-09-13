@@ -8,7 +8,6 @@ DESC = ""
 #</METADATA>
 
 #<COMMON_CODE>
-import random as r
 class State:
     def __init__(self, old=None):
         if not old is None:
@@ -55,11 +54,9 @@ class State:
         return 4000 * self.fishList[species].price
       elif method == 5: #rod-and-reel
         if species == 6:
-          num1 = r.randint(2, 5)
-          num2 = num1 - r.randint(1, num1)
-          self.fishList[num1].number -= 1000
-          self.fishList[num2].number -= 1000
-          return 1000 * self.fishList[num1].price + 1000 * self.fishList[num2].price
+          self.fishList[2].number -= 1000
+          self.fishList[4].number -= 1000
+          return 1000 * self.fishList[2].price + 1000 * self.fishList[4].price
         self.fishList[species].number -= 1000
         return 1000 * self.fishList[species].price
       else:
@@ -79,6 +76,7 @@ class State:
         profit = newState.fishing_method(method, species)
         for fish in newState.fishList:
           fish.number = max(0, fish.number)
+          fish.number = min(10000, fish.number)
 
           N += (fish.number)
           nSum += fish.number * (fish.number - 1)
@@ -98,8 +96,8 @@ class State:
         newState.money += profit
         return newState
 
-    def describe_state(self):
-        return
+    #def describe_state(self):
+        #return
 
     def is_goal(self):
         if self.roundsLeft == 0:
@@ -225,7 +223,7 @@ phi13 = Operator("Use trawling to fish Cod and Halibut",
   lambda s: s.can_move(4, 6),
   lambda s: s.move(4, 6))
 
-phi14 = Operator("Use rod and reel for two random fish species",
+phi14 = Operator("Use rod and reel for Cod and Striped Bass",
   lambda s: s.can_move(5, 6),
   lambda s: s.move(5, 6))
 
