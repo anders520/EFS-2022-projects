@@ -9,33 +9,33 @@ DESC = ""
 
 #<COMMON_CODE>
 class State:
-    def __init__(self, old=None):   
-        if not old is None:
-            self.biodiversityScore = old.biodiversityScore
-            self.biodiversityIndex = old.biodiversityIndex
-            self.money = old.money
-            self.roundsLeft = old.roundsLeft
-            self.fishList = old.fishList
-            self.event = old.event
-            self.bycatch = old.bycatch
-        else:
-          self.biodiversityScore = 100
-          self.money = 0
-          self.roundsLeft = 20
-          self.biodiversityIndex = 0
-          self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
-          self.event = 0
-          self.bycatch = 0
+    def __init__(self, old=None):
+      self.biodiversityScore = 100
+      self.money = 0
+      self.roundsLeft = 20
+      self.biodiversityIndex = 0
+      self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
+      self.event = 0
+      self.bycatch = 0   
+      if not old is None:
+          self.biodiversityScore = old.biodiversityScore
+          self.biodiversityIndex = old.biodiversityIndex
+          self.money = old.money
+          self.roundsLeft = old.roundsLeft
+          self.fishList = old.fishList
+          self.event = old.event
+          self.bycatch = old.bycatch
+      #else:
+          
 
 
     def can_move(self, method, species):
-      if self.biodiversityScore < 70: return False
+      if self.biodiversityScore < 75: return False
       if species < 6:
         if method != 0 and self.fishList[species].number <= 0:
           return False
       else:
-        if method != 0 and self.fishList[0].number <= 0 and self.fishList[1].number <= 0 and self.fishList[2].number <= 0\
-        and self.fishList[3].number <= 0 and self.fishList[4].number <= 0 and self.fishList[5].number <= 0:
+        if method != 0 and self.fishList[2].number <= 0:
           return False
       return True
     
@@ -157,7 +157,7 @@ class State:
       return date
         
     def __str__(self):
-      currentState = '(Profit: '+ str(int(self.money / 1000.0)) + 'k'
+      currentState = '(Gross Profit: '+ str(int(self.money / 1000.0)) + 'k'
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
       for fish in self.fishList:
@@ -165,7 +165,16 @@ class State:
       currentState += ', Bycatch: '+str(self.bycatch)
       currentState += ')'
       currentState += self.date()
-      if self.biodiversityScore < 70: currentState += '\nYou have lost the game because your Biodiversity Score is lower than 70, and you can only quit or go back now'
+      if self.roundsLeft == 20:
+        currentState += '''
+
+Welcome to Fishing Frenzy! You are the new decision maker of WARMD Fishing Co.
+There are different fishing methods you can use to earn profit for the company. 
+Your goal is to earn as much as possible while keeping the ecosystem healthy meaning that your Biodiversity Score cannot drop below 75.
+Good Luck and Have Fun!
+'''
+      if self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is\
+         lower than 70, and you can only quit the game...'
       elif self.event == 0:
         currentState += '\nThere is no event occuring.'
       elif self.event == 1:
@@ -194,12 +203,12 @@ class Fish:
     if self.number < 10000:
       self.number += int(self.number * self.repRate)
     
-salmon = Fish('salmon', 750, 6000, 1)
-tuna = Fish('tuna', 1200, 6000, 1)
-cod = Fish('cod', 75, 6000, 1)
-pompano = Fish('pompano', 20, 6000, 1)
-stripedBass = Fish('striped bass', 480, 6000, 1)
-halibut = Fish('halibut', 6000, 6000, 1)
+salmon = Fish('salmon', 750, 6000, 0.5)
+tuna = Fish('tuna', 1200, 6000, 0.5)
+cod = Fish('cod', 75, 6000, 0.5)
+pompano = Fish('pompano', 20, 6000, 0.5)
+stripedBass = Fish('striped bass', 480, 6000, 0.5)
+halibut = Fish('halibut', 6000, 6000, 0.5)
 
 class Operator:
   def __init__(self, name, precond, state_transf):
