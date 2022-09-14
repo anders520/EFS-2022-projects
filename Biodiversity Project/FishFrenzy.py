@@ -9,14 +9,7 @@ DESC = ""
 
 #<COMMON_CODE>
 class State:
-    def __init__(self, old=None):
-        self.biodiversityScore = 100
-        self.money = 0
-        self.roundsLeft = 12
-        self.biodiversityIndex = 0
-        self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
-        self.event = 0
-        
+    def __init__(self, old=None):   
         if not old is None:
             self.biodiversityScore = old.biodiversityScore
             self.biodiversityIndex = old.biodiversityIndex
@@ -24,6 +17,15 @@ class State:
             self.roundsLeft = old.roundsLeft
             self.fishList = old.fishList
             self.event = old.event
+            self.bycatch = old.bycatch
+        else:
+          self.biodiversityScore = 100
+          self.money = 0
+          self.roundsLeft = 20
+          self.biodiversityIndex = 0
+          self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
+          self.event = 0
+          self.bycatch = 0
 
 
     def can_move(self, method, species):
@@ -39,21 +41,26 @@ class State:
     def fishing_method(self, method, species):
       if method == 1 and species != 3 and species != 5: #longlines targets specific species except for halibut and pompano
         self.fishList[species].number -= 2000
+        self.bycatch += 200
         return 2000 * self.fishList[species].price
       elif method == 2: #gillnets
         self.fishList[species].number -= 3000
+        self.bycatch += 500
         return 3000 * self.fishList[species].price
       elif method == 3: #purse seines
         self.fishList[species].number -= 3000
+        self.bycatch += 1000
         return 3000 * self.fishList[species].price
       elif method == 4: #trawling
         self.fishList[2].number -= 4000
         self.fishList[5].number -= 4000
+        self.bycatch += 2000
         return 4000 * self.fishList[2].price + 4000 * self.fishList[5].price
       elif method == 5: #rod-and-reel
         if species == 6:
           self.fishList[2].number -= 1000
           self.fishList[4].number -= 1000
+          self.bycatch += 0
           return 1000 * self.fishList[2].price + 1000 * self.fishList[4].price
         self.fishList[species].number -= 1000
         return 1000 * self.fishList[species].price
@@ -72,35 +79,46 @@ class State:
         newState.money = self.money
         newState.fishList = self.fishList
         newState.event = self.event
+        newState.bycatch = self.bycatch
         profit = newState.fishing_method(method, species)
 
         # A flat rate of multiplying every three rounds and cap at a high num
-        if (newState.roundsLeft % 3 == 1):
+        if (newState.roundsLeft % 4 == 1):
           for f in newState.fishList:
             f.reproduce()
         
         for fish in newState.fishList:
-          fish.number = max(0, fish.number)
           fish.number = min(10000, fish.number)
-
-          N += (fish.number)
-          nSum += fish.number * (fish.number - 1)
-        
-        if (newState.roundsLeft % 3 == 0):
+          
+        if (newState.roundsLeft == 16 or newState.roundsLeft == 10 or newState.roundsLeft == 4):
           newState.event = 1
+        elif (newState.roundsLeft == 13 or newState.roundsLeft == 7):
+          newState.event = 2
         else:
           newState.event = 0
 
         if newState.event == 1:
           for f in newState.fishList:
             f.number -= 1000
+        elif newState.event == 2:
+          for f in newState.fishList:
+            f.number -= 500
+        
+        for fish in newState.fishList:
+          fish.number = max(0, fish.number)
+
+          N += (fish.number)
+          nSum += fish.number * (fish.number - 1)
+        N += max(0, 10000 - newState.bycatch)
+        nSum += (max(0, 10000 - newState.bycatch)) * (max(0, 10000 - newState.bycatch) - 1)
         #Ignore this block of code 
         #Calculation of Simpson's Diversity Index
         if N > 1:
           newState.biodiversityIndex = round(1.0 - nSum / (N * (N-1)), 3)
         else:
-          newState.biodiversityIndex = 1.0
-        
+          newState.biodiversityIndex = 0.0
+        divIndex = round(1 - (((6000 * 5999 * 6) + (10000 * 9999)) / (46000 * 45999)), 3)
+        newState.biodiversityScore = round((newState.biodiversityIndex / divIndex) * 100, 1)
         newState.money += profit
         return newState
 
@@ -120,19 +138,36 @@ class State:
         if self.roundsLeft != s2.roundsLeft: return False
         if self.fishList != s2.fishList: return False
         if self.event != s2.event: return False
+        if self.bycatch != s2.bycatch: return False
         return True
-
+    
+    def date(self):
+      date = ''
+      if self.roundsLeft >= 17:
+        date = '\nYear 2025 Quarter ' + str(21 - self.roundsLeft)
+      elif self.roundsLeft >= 13:
+        date = '\nYear 2026 Quarter ' + str(17 - self.roundsLeft)
+      elif self.roundsLeft >= 9:
+        date = '\nYear 2027 Quarter ' + str(13 - self.roundsLeft)
+      elif self.roundsLeft >= 5:
+        date = '\nYear 2028 Quarter ' + str(9 - self.roundsLeft)
+      elif self.roundsLeft >= 1:
+        date = '\nYear 2029 Quarter ' + str(5 - self.roundsLeft)
+      return date
+        
     def __str__(self):
       currentState = '(Profit: '+ str(int(self.money / 1000.0)) + 'k'
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
       for fish in self.fishList:
         currentState += ', ' + fish.name +' left: '+str(fish.number)
+      currentState += ', Bycatch: '+str(self.bycatch)
       currentState += ')'
+      currentState += self.date()
       if self.event == 0:
         currentState += '\nThere is no event occuring.'
       elif self.event == 1:
-        currentState += '\nA factory had released tons of pollution into the ocean and all fish populations are decreased by 1000.'  
+        currentState += '\nA factory had released tons of pollution into the ocean and some fish populations are decreased'  
       return currentState
 
     def __hash__(self):
