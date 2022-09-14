@@ -7,7 +7,9 @@ Version of Sep. 13, 2022.
 from show_state_array import initialize_tk, state_array, state_display, STATE_WINDOW, test
 
 from tkinter import font
-
+from tkinter import *
+from tkinter import ttk
+import sys
 myFont=None
 
 WIDTH = 400
@@ -46,8 +48,10 @@ def render_state(s):
 
     # Adjust colors and strings to match the state.
     j = 0
+    fishTotal = 0
     for fish in s.fishList:
         fishBars = int(fish.number / 1000)
+        fishTotal += fish.number
         colorList = [salmonColor, tunaColor, codColor, pompanoColor, bassColor, halibutColor]
         for i in range(fishBars):
             the_color_array[9 - i][j] = colorList[j]
@@ -61,6 +65,8 @@ def render_state(s):
                                   caption=caption)
     #print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
+    #if fishTotal <= 0:
+        #sys.exit()
 
     
     

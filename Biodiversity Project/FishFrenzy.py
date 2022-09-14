@@ -171,7 +171,7 @@ class State:
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
       for fish in self.fishList:
         currentState += ', \n' + fish.name +' left: '+str(fish.number)
-      currentState += ', Bycatch: '+str(self.bycatch)
+      currentState += ', \nBycatch: '+str(self.bycatch)
       currentState += ')'
       currentState += self.date()
       if self.roundsLeft == 20:
@@ -193,8 +193,8 @@ lower than 70, and you can only quit the game...'
         currentState += '\nA factory had released tons of pollution into the ocean and fish populations are decreased by 1000'
       elif self.event == 2:
         currentState += '\nA hurricane caused runoff pollution and fish populations are decreased by 500'
-      if kill:
-        sys.exit(currentState)
+      #if kill:
+        #sys.exit(currentState)
       return currentState
 
     def __hash__(self):
@@ -217,12 +217,12 @@ class Fish:
     if self.number < 10000:
       self.number += int(self.number * self.repRate)
     
-salmon = Fish('salmon', 750, 6000, 0.5)
-tuna = Fish('tuna', 1200, 6000, 0.5)
-cod = Fish('cod', 75, 6000, 0.5)
-pompano = Fish('pompano', 20, 6000, 0.5)
-stripedBass = Fish('striped bass', 480, 6000, 0.5)
-halibut = Fish('halibut', 6000, 6000, 0.5)
+salmon = Fish('Salmon', 750, 6000, 0.5)
+tuna = Fish('Tuna', 1200, 6000, 0.5)
+cod = Fish('Cod', 75, 6000, 0.5)
+pompano = Fish('Pompano', 20, 6000, 0.5)
+stripedBass = Fish('Striped Bass', 480, 6000, 0.5)
+halibut = Fish('Halibut', 6000, 6000, 0.5)
 
 class Operator:
   def __init__(self, name, precond, state_transf):
