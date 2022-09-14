@@ -32,6 +32,7 @@ class State:
 
     def can_move(self, method, species):
       if self.biodiversityScore < 75: return False
+      if method == 6: return True
       if species < 6:
         if method != 0 and self.fishList[species].number <= 0:
           return False
@@ -169,7 +170,7 @@ class State:
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
       for fish in self.fishList:
-        currentState += ', ' + fish.name +' left: '+str(fish.number)
+        currentState += ', \n' + fish.name +' left: '+str(fish.number)
       currentState += ', Bycatch: '+str(self.bycatch)
       currentState += ')'
       currentState += self.date()
@@ -184,7 +185,7 @@ Good Luck and Have Fun!
       if self.biodiversityScore == 0:
         currentState += '\nCongratulations, all fish have been killed by YOU... YOU LOST!!!'
         kill = True
-      elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is\
+      elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is \
 lower than 70, and you can only quit the game...'
       elif self.event == 0:
         currentState += '\nThere is no event occuring.'
@@ -314,7 +315,7 @@ phi17 = Operator("Use rod and reel to fish for Halibut",
   lambda s: s.move(5, 5))
 
 phi18 = Operator("Go Bomb fishing",
-  lambda s: s.can_move(5, 5),
+  lambda s: s.can_move(6, 5),
   lambda s: s.move(6, 5))
 
 
