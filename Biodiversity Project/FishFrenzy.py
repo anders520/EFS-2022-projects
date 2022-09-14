@@ -191,7 +191,7 @@ lower than 70, and you can only quit the game...'
       elif self.event == 1:
         currentState += '\nA factory had released tons of pollution into the ocean and fish populations are decreased by 1000'
       elif self.event == 2:
-        currentState += '\nA hurricane caused runoff pollution and fish populations are decreased by 500'  
+        currentState += '\nA hurricane caused runoff pollution and fish populations are decreased by 500'
       if kill:
         sys.exit(currentState)
       return currentState
@@ -260,68 +260,64 @@ phi3 = Operator("Use longlines to fish Cod",
 phi4 = Operator("Use longlines to fish Striped Bass",
   lambda s: s.can_move(1, 4),
   lambda s: s.move(1, 4))
-
-phi5 = Operator("Use longlines to fish Halibut",
-  lambda s: s.can_move(1, 5),
-  lambda s: s.move(1, 5))
   
-phi6 = Operator("Use gill nets to fish Salmon",
+phi5 = Operator("Use gill nets to fish Salmon",
   lambda s: s.can_move(2, 0),
   lambda s: s.move(2, 0))
 
-phi7 = Operator("Use gill nets to fish Cod",
+phi6 = Operator("Use gill nets to fish Cod",
   lambda s: s.can_move(2, 2),
   lambda s: s.move(2, 2))
 
-phi8 = Operator("Use gill nets to fish Pompano",
+phi7 = Operator("Use gill nets to fish Pompano",
   lambda s: s.can_move(2, 3),
   lambda s: s.move(2, 3))
 
-phi9 = Operator("Use purse seines to fish Salmon",
+phi8 = Operator("Use purse seines to fish Salmon",
   lambda s: s.can_move(3, 0),
   lambda s: s.move(3, 0))
 
-phi10 = Operator("Use purse seines to fish Tuna",
+phi9 = Operator("Use purse seines to fish Tuna",
   lambda s: s.can_move(3, 1),
   lambda s: s.move(3, 1))
 
-phi11 = Operator("Use trawling to fish Cod and Halibut",
+phi10 = Operator("Use trawling to fish Cod and Halibut",
   lambda s: s.can_move(4, 6),
   lambda s: s.move(4, 6))
 
-phi12 = Operator("Use rod and reel for Cod and Striped Bass",
+phi11 = Operator("Use rod and reel for Cod and Striped Bass",
   lambda s: s.can_move(5, 6),
   lambda s: s.move(5, 6))
 
-phi13 = Operator("Use rod and reel to fish for Salmon",
+phi12 = Operator("Use rod and reel to fish for Salmon",
   lambda s: s.can_move(5, 0),
   lambda s: s.move(5, 0))
 
-phi14 = Operator("Use rod and reel to fish for Tuna",
+phi13 = Operator("Use rod and reel to fish for Tuna",
   lambda s: s.can_move(5, 1),
   lambda s: s.move(5, 1))
   
-phi15 = Operator("Use rod and reel to fish for Cod",
+phi14 = Operator("Use rod and reel to fish for Cod",
   lambda s: s.can_move(5, 2),
   lambda s: s.move(5, 2))
 
-phi16 = Operator("Use rod and reel to fish for Pompano",
+phi15 = Operator("Use rod and reel to fish for Pompano",
   lambda s: s.can_move(5, 3),
   lambda s: s.move(5, 3))
 
-phi17 = Operator("Use rod and reel to fish for Striped Bass",
+phi16 = Operator("Use rod and reel to fish for Striped Bass",
   lambda s: s.can_move(5, 4),
     lambda s: s.move(5, 4))
 
-phi18 = Operator("Use rod and reel to fish for Halibut",
+phi17 = Operator("Use rod and reel to fish for Halibut",
   lambda s: s.can_move(5, 5),
   lambda s: s.move(5, 5))
 
-phi19 = Operator("Go Bomb fishing",
+phi18 = Operator("Go Bomb fishing",
   lambda s: s.can_move(5, 5),
   lambda s: s.move(6, 5))
 
 
 OPERATORS = [phi0, phi1, phi2, phi3, phi4, phi5, phi6, phi7, phi8, phi9, phi10, phi11, phi12,\
-   phi13, phi14, phi15, phi16, phi17, phi18, phi19]
+   phi13, phi14, phi15, phi16, phi17, phi18]
 #</OPERATORS>
