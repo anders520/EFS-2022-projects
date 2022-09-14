@@ -29,6 +29,7 @@ class State:
 
 
     def can_move(self, method, species):
+      if self.biodiversityScore < 70: return False
       if species < 6:
         if method != 0 and self.fishList[species].number <= 0:
           return False
@@ -164,10 +165,13 @@ class State:
       currentState += ', Bycatch: '+str(self.bycatch)
       currentState += ')'
       currentState += self.date()
-      if self.event == 0:
+      if self.biodiversityScore < 70: currentState += '\nYou have lost the game because your Biodiversity Score is lower than 70, and you can only quit or go back now'
+      elif self.event == 0:
         currentState += '\nThere is no event occuring.'
       elif self.event == 1:
-        currentState += '\nA factory had released tons of pollution into the ocean and some fish populations are decreased'  
+        currentState += '\nA factory had released tons of pollution into the ocean and fish populations are decreased by 1000'
+      elif self.event == 2:
+        currentState += '\nA hurricane caused runoff pollution and fish populations are decreased by 500'  
       return currentState
 
     def __hash__(self):

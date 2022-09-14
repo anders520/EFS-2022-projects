@@ -44,55 +44,15 @@ def render_state(s):
     for j in range(9):
         the_string_array.append(row[:])
 
-
-    #Bar Variables
-    salmonBars = int(s.fishList[0].number / 1000)
-    tunaBars = int(s.fishList[1].number / 1000)
-    bassBars = int(s.fishList[2].number / 1000)
-    halibutBars = int(s.fishList[3].number / 1000)
-    pompanoBars = int(s.fishList[4].number / 1000)
-    codBars = int(s.fishList[5].number / 1000)
-
-
     # Adjust colors and strings to match the state.
-    for i in range(salmonBars):
-        the_color_array[9 - i][0] = salmonColor
+    j = 0
+    for fish in s.fishList:
+        fishBars = int(fish.number / 1000)
+        colorList = [salmonColor, tunaColor, codColor, pompanoColor, bassColor, halibutColor]
+        for i in range(fishBars):
+            the_color_array[9 - i][j] = colorList[j]
+        j+=1
 
-    for i in range(tunaBars):
-        the_color_array[9 - i][1] = tunaColor
-
-    for i in range(bassBars):
-        the_color_array[9 - i][2] = bassColor
-
-    for i in range(halibutBars):
-        the_color_array[9 - i][3] = halibutColor
-
-    for i in range(pompanoBars):
-        the_color_array[9 - i][4] = pompanoColor
-
-    for i in range(codBars):
-        the_color_array[9 - i][5] = codColor
-        
-
-    '''for j in range(6):
-        if j == 0: cube_list = s.fishList[0].number
-        elif j == 1: cube_list = s.fishList[1].number
-        elif j == 2: cube_list = s.fishList[2].number
-        elif j == 3: cube_list = s.fishList[3].number
-        elif j == 4: cube_list = s.fishList[4].number
-        elif j == 5: cube_list = s.fishList[5].number
-        for i in range(6):
-            c = cube_list[i]
-            if c == 0: color = salmonColor
-            elif c == 1: color = tunaColor
-            elif c == 2: color = bassColor
-            elif c == 3: color = halibutColor
-            if i <= 3:
-                the_color_array[j * 4 + 1][i] = color
-            elif i == 4:
-                the_color_array[j * 4][1] = color
-            elif i == 5:
-                the_color_array[j * 4 + 2][1] = color'''
 
     caption="Current state of the puzzle. Textual version: "+str(s)        
     the_state_array = state_array(color_array=the_color_array,
