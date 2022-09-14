@@ -68,7 +68,7 @@ PURPOSE OF THIS MODULE:
     """
 
 # The following line is used in the Tk_SOLUZION_Client and the IDLE_Text_SOLUZION_Client.
-problem_name = 'Biodiversity Project\FishFrenzy_PreAlpha'
+problem_name = 'Biodiversity Project\FishFrenzy'
 
 def client_mainloop():
   print(TITLE)

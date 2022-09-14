@@ -35,7 +35,6 @@ class State:
       return True
     
     def fishing_method(self, method, species):
-      #if method == 0: #nothing 
       if method == 1 and species != 3 and species != 5: #longlines targets specific species except for halibut and pompano
         self.fishList[species].number -= 2000
         return 2000 * self.fishList[species].price
@@ -59,7 +58,7 @@ class State:
           return 1000 * self.fishList[2].price + 1000 * self.fishList[4].price
         self.fishList[species].number -= 1000
         return 1000 * self.fishList[species].price
-      else:
+      else: #if method == 0: do nothing 
         return 0
         
 
