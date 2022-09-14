@@ -8,6 +8,7 @@ DESC = ""
 #</METADATA>
 
 #<COMMON_CODE>
+import sys
 class State:
     def __init__(self, old=None):
       self.biodiversityScore = 100
@@ -40,7 +41,13 @@ class State:
       return True
     
     def fishing_method(self, method, species):
-      if method == 1 and species != 3 and species != 5: #longlines targets specific species except for halibut and pompano
+      if method == 6:
+        psum = 0
+        for f in self.fishList:
+          psum += f.number * f.price
+          f.number -= f.number
+        return psum
+      elif method == 1 and species != 3 and species != 5: #longlines targets specific species except for halibut and pompano
         self.fishList[species].number -= 2000
         self.bycatch += 200
         return 2000 * self.fishList[species].price
@@ -157,6 +164,7 @@ class State:
       return date
         
     def __str__(self):
+      kill = False
       currentState = '(Gross Profit: '+ str(int(self.money / 1000.0)) + 'k'
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
@@ -173,14 +181,19 @@ There are different fishing methods you can use to earn profit for the company.
 Your goal is to earn as much as possible while keeping the ecosystem healthy meaning that your Biodiversity Score cannot drop below 75.
 Good Luck and Have Fun!
 '''
-      if self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is\
-         lower than 70, and you can only quit the game...'
+      if self.biodiversityScore == 0:
+        currentState += '\nCongratulations, all fish have been killed by YOU... YOU LOST!!!'
+        kill = True
+      elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is\
+lower than 70, and you can only quit the game...'
       elif self.event == 0:
         currentState += '\nThere is no event occuring.'
       elif self.event == 1:
         currentState += '\nA factory had released tons of pollution into the ocean and fish populations are decreased by 1000'
       elif self.event == 2:
         currentState += '\nA hurricane caused runoff pollution and fish populations are decreased by 500'  
+      if kill:
+        sys.exit(currentState)
       return currentState
 
     def __hash__(self):
@@ -304,6 +317,11 @@ phi18 = Operator("Use rod and reel to fish for Halibut",
   lambda s: s.can_move(5, 5),
   lambda s: s.move(5, 5))
 
+phi19 = Operator("Go Bomb fishing",
+  lambda s: s.can_move(5, 5),
+  lambda s: s.move(6, 5))
+
+
 OPERATORS = [phi0, phi1, phi2, phi3, phi4, phi5, phi6, phi7, phi8, phi9, phi10, phi11, phi12,\
-   phi13, phi14, phi15, phi16, phi17, phi18]
+   phi13, phi14, phi15, phi16, phi17, phi18, phi19]
 #</OPERATORS>
