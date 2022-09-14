@@ -1,7 +1,7 @@
 #Dawson Harris & Anders Choy
 
 '''FishFrenzy_Array_VIS_FOR_TK.py
-Version of Sep. 06, 2022.
+Version of Sep. 13, 2022.
 '''
 
 from show_state_array import initialize_tk, state_array, state_display, STATE_WINDOW, test
@@ -26,31 +26,67 @@ def render_state(s):
         myFont = font.Font(family="Helvetica", size=18, weight="bold")
     print("In render_state, state is "+str(s))
     # Create the default array of colors
-    red = (255, 50, 0)
-    green = (60, 180, 115)
-    blue = (80,80,255)
-    yellow = (255, 255, 122)
     white = (255, 255, 255)
+    salmonColor = (218, 144, 13)
+    tunaColor = (143, 1, 27)
+    bassColor = (128,128,0)
+    halibutColor = (184, 115, 51)
+    pompanoColor = (255, 243, 128)
+    codColor = (170, 255, 0)
     
-    row = [white]*2
-    the_color_array = [row, row[:]]
-    #for i in range(14): the_color_array.append(row[:])
+    row = [white]*6
+    the_color_array = [row]
+    for i in range(9):
+        the_color_array.append(row[:])
     # Now create the default array of string labels.
-    row = ['' for i in range(4)]
-    the_string_array = [row, row[:]]
+    row = ['' for i in range(6)]
+    the_string_array = [row]
+    for j in range(9):
+        the_string_array.append(row[:])
+
+
+    #Bar Variables
+    salmonBars = int(s.fishList[0].number / 1000)
+    tunaBars = int(s.fishList[1].number / 1000)
+    bassBars = int(s.fishList[2].number / 1000)
+    halibutBars = int(s.fishList[3].number / 1000)
+    pompanoBars = int(s.fishList[4].number / 1000)
+    codBars = int(s.fishList[5].number / 1000)
+
 
     # Adjust colors and strings to match the state.
-    '''for j in range(4):
-        if j == 0: cube_list = s.first_cube_list
-        elif j == 1: cube_list = s.second_cube_list
-        elif j == 2: cube_list = s.third_cube_list
-        elif j == 3: cube_list = s.fourth_cube_list
+    for i in range(salmonBars):
+        the_color_array[9 - i][0] = salmonColor
+
+    for i in range(tunaBars):
+        the_color_array[9 - i][1] = tunaColor
+
+    for i in range(bassBars):
+        the_color_array[9 - i][2] = bassColor
+
+    for i in range(halibutBars):
+        the_color_array[9 - i][3] = halibutColor
+
+    for i in range(pompanoBars):
+        the_color_array[9 - i][4] = pompanoColor
+
+    for i in range(codBars):
+        the_color_array[9 - i][5] = codColor
+        
+
+    '''for j in range(6):
+        if j == 0: cube_list = s.fishList[0].number
+        elif j == 1: cube_list = s.fishList[1].number
+        elif j == 2: cube_list = s.fishList[2].number
+        elif j == 3: cube_list = s.fishList[3].number
+        elif j == 4: cube_list = s.fishList[4].number
+        elif j == 5: cube_list = s.fishList[5].number
         for i in range(6):
             c = cube_list[i]
-            if c == 0: color = red
-            elif c == 1: color = green
-            elif c == 2: color= blue
-            elif c == 3: color = yellow
+            if c == 0: color = salmonColor
+            elif c == 1: color = tunaColor
+            elif c == 2: color = bassColor
+            elif c == 3: color = halibutColor
             if i <= 3:
                 the_color_array[j * 4 + 1][i] = color
             elif i == 4:
