@@ -33,70 +33,51 @@ class State:
       self.roundsLeft = 20
       self.biodiversityIndex = 0
       self.fishList = [self.salmon, self.tuna, self.cod, self.pompano, self.stripedBass, self.halibut]
+      self.FISH_STACK = [[self.fishList]]
       self.event = 0
       self.bycatch = 0   
       if not old is None:
-          self.biodiversityScore = old.biodiversityScore
-          self.biodiversityIndex = old.biodiversityIndex
-          self.money = old.money
-          self.roundsLeft = old.roundsLeft
-          self.fishList = old.fishList
-          self.event = old.event
-          self.bycatch = old.bycatch
+        self.salmon = old.salmon
+        self.tuna = old.tuna
+        self.cod = old.cod
+        self.pompano = old.pompano
+        self.stripedBass = old.stripedBass
+        self.halibut = old.halibut
+        self.biodiversityScore = old.biodiversityScore
+        self.biodiversityIndex = old.biodiversityIndex
+        self.money = old.money
+        self.roundsLeft = old.roundsLeft
+        self.fishList = old.fishList
+        self.event = old.event
+        self.bycatch = old.bycatch
+        self.FISH_STACK = old.FISH_STACK
+        if len(self.FISH_STACK) > 1:
+          self.fishList = self.FISH_STACK[-2]
       #else:
           
 
 
     def can_move(self, method, species):
-      if self.biodiversityScore < 75: return False
+      #if self.biodiversityScore < 75: return False
       if method == 6: return True
-      if species < 6:
+      '''if species < 6:
         if method != 0 and self.fishList[species].number <= 0:
           return False
       else:
         if method != 0 and self.fishList[2].number <= 0:
-          return False
+          return False'''
       return True
-    
-    def fishing_method(self, method, species):
-      if method == 6:
-        psum = 0
-        for f in self.fishList:
-          psum += f.number * f.price
-          f.number -= f.number
-        return psum
-      elif method == 1 and species != 3 and species != 5: #longlines targets specific species except for halibut and pompano
-        self.fishList[species].number -= 2000
-        self.bycatch += 200
-        return 2000 * self.fishList[species].price
-      elif method == 2: #gillnets
-        self.fishList[species].number -= 3000
-        self.bycatch += 500
-        return 3000 * self.fishList[species].price
-      elif method == 3: #purse seines
-        self.fishList[species].number -= 3000
-        self.bycatch += 1000
-        return 3000 * self.fishList[species].price
-      elif method == 4: #trawling
-        self.fishList[2].number -= 4000
-        self.fishList[5].number -= 4000
-        self.bycatch += 2000
-        return 4000 * self.fishList[2].price + 4000 * self.fishList[5].price
-      elif method == 5: #rod-and-reel
-        if species == 6:
-          self.fishList[2].number -= 1000
-          self.fishList[4].number -= 1000
-          self.bycatch += 0
-          return 1000 * self.fishList[2].price + 1000 * self.fishList[4].price
-        self.fishList[species].number -= 1000
-        return 1000 * self.fishList[species].price
-      else: #if method == 0: do nothing 
-        return 0
         
 
     def move(self, method, species):
         #Creates a new state if it is legal
         newState = State(old=self) # Make a copy of the current state.
+        newState.salmon = self.salmon
+        newState.tuna = self.tuna
+        newState.cod = self.cod
+        newState.pompano = self.pompano
+        newState.stripedBass = self.stripedBass
+        newState.halibut = self.halibut
         newState.roundsLeft = self.roundsLeft - 1
         N = 0
         nSum = 0
@@ -106,15 +87,59 @@ class State:
         newState.fishList = self.fishList
         newState.event = self.event
         newState.bycatch = self.bycatch
-        profit = newState.fishing_method(method, species)
+        newState.FISH_STACK = self.FISH_STACK
+        #profit = newState.fishing_method(method, species)
+        fish = None
+        if species == 0: fish = newState.salmon
+        if species == 1: fish = newState.tuna
+        if species == 2: fish = newState.cod
+        if species == 3: fish = newState.pompano
+        if species == 4: fish = newState.stripedBass
+        if species == 5: fish = newState.halibut
+        if method == 6:
+          psum = 0
+          for f in newState.fishList:
+            psum += f.number * f.price
+            f.number -= f.number
+          profit = psum
+        elif method == 1 and species != 3 and species != 5: #longlines targets specific species except for halibut and pompano
+          fish.number -= 2000
+          newState.bycatch += 200
+          profit = 2000 * fish.price
+        elif method == 2: #gillnets
+          fish.number -= 3000
+          newState.bycatch += 500
+          profit = 3000 * fish.price
+        elif method == 3: #purse seines
+          fish.number -= 3000
+          newState.bycatch += 1000
+          profit = 3000 * fish.price
+        elif method == 4: #trawling
+          newState.cod.number -= 4000
+          newState.halibut.number -= 4000
+          newState.bycatch += 2000
+          profit = 4000 * newState.cod.price + 4000 * newState.halibut.price
+        elif method == 5: #rod-and-reel
+          if species == 6:
+            newState.cod.number -= 1000
+            newState.stripedBass.number -= 1000
+            newState.bycatch += 0
+            profit = 1000 * newState.cod.price + 1000 * newState.stripedBass.price
+          else:
+            newState.fish.number -= 1000
+            profit = 1000 * newState.fish.price
+        else: #if method == 0: do nothing 
+          profit = 0
 
+        newState.fishList = [newState.salmon, newState.tuna, newState.cod, newState.pompano, newState.stripedBass, newState.halibut]
+        self.fishList = [self.salmon, self.tuna, self.cod, self.pompano, self.stripedBass, self.halibut]
         # A flat rate of multiplying every three rounds and cap at a high num
         if (newState.roundsLeft % 4 == 1):
           for f in newState.fishList:
             f.reproduce()
         
-        for fish in newState.fishList:
-          fish.number = min(10000, fish.number)
+        #for fish in newState.fishList:
+          #fish.number = min(10000, fish.number)
           
         if (newState.roundsLeft == 16 or newState.roundsLeft == 10 or newState.roundsLeft == 4):
           newState.event = 1
@@ -130,11 +155,11 @@ class State:
           for f in newState.fishList:
             f.number -= 500
         
-        for fish in newState.fishList:
-          fish.number = max(0, fish.number)
+        #for fish in newState.fishList:
+          #fish.number = max(0, fish.number)
 
-          N += (fish.number)
-          nSum += fish.number * (fish.number - 1)
+          #N += (fish.number)
+          #nSum += fish.number * (fish.number - 1)
         N += max(0, 10000 - newState.bycatch)
         nSum += (max(0, 10000 - newState.bycatch)) * (max(0, 10000 - newState.bycatch) - 1)
         #Ignore this block of code 
@@ -146,6 +171,7 @@ class State:
         divIndex = round(1 - (((6000 * 5999 * 6) + (10000 * 9999)) / (46000 * 45999)), 3)
         newState.biodiversityScore = round((newState.biodiversityIndex / divIndex) * 100, 1)
         newState.money += profit
+        newState.FISH_STACK.append(newState.fishList)
         return newState
 
     #def describe_state(self):
@@ -158,6 +184,12 @@ class State:
     
     def __eq__(self, s2):
         if s2==None: return False
+        if self.salmon != s2.salmon: return False
+        if self.tuna != s2.tuna: return False
+        if self.cod != s2.cod: return False
+        if self.pompano != s2.pompano: return False
+        if self.stripedBass != s2.stripedBass: return False
+        if self.halibut != s2.halibut: return False
         if self.money != s2.money: return False
         if self.biodiversityScore != s2.biodiversityScore: return False
         if self.biodiversityIndex != s2.biodiversityIndex: return False
@@ -186,6 +218,13 @@ class State:
       currentState = '(Gross Profit: '+ str(int(self.money / 1000.0)) + 'k'
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
+      '''currentState += ', \n' + self.salmon.name +' left: '+str(self.salmon.number)
+      currentState += ', \n' + self.tuna.name +' left: '+str(self.tuna.number)
+      currentState += ', \n' + self.cod.name +' left: '+str(self.cod.number)
+      currentState += ', \n' + self.pompano.name +' left: '+str(self.pompano.number)
+      currentState += ', \n' + self.stripedBass.name +' left: '+str(self.stripedBass.number)
+      currentState += ', \n' + self.halibut.name +' left: '+str(self.halibut.number)
+      '''
       for fish in self.fishList:
         currentState += ', \n' + fish.name +' left: '+str(fish.number)
       currentState += ', \nBycatch: '+str(self.bycatch)
