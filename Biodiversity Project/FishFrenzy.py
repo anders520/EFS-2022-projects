@@ -10,18 +10,20 @@ DESC = ""
 #<COMMON_CODE>
 class State:
     def __init__(self, old=None):
+        self.biodiversityScore = 100
+        self.money = 0
+        self.roundsLeft = 12
+        self.biodiversityIndex = 0
+        self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
+        self.event = 0
+        
         if not old is None:
             self.biodiversityScore = old.biodiversityScore
             self.biodiversityIndex = old.biodiversityIndex
             self.money = old.money
             self.roundsLeft = old.roundsLeft
             self.fishList = old.fishList
-        
-        self.biodiversityScore = 100
-        self.money = 0
-        self.roundsLeft = 12
-        self.biodiversityIndex = 0
-        self.fishList = [salmon, tuna, cod, pompano, stripedBass, halibut]
+            self.event = old.event
 
 
     def can_move(self, method, species):
@@ -45,12 +47,9 @@ class State:
         self.fishList[species].number -= 3000
         return 3000 * self.fishList[species].price
       elif method == 4: #trawling
-        if species == 6:
-          self.fishList[2].number -= 4000
-          self.fishList[5].number -= 4000
-          return 4000 * self.fishList[2].price + 4000 * self.fishList[5].price
-        self.fishList[species].number -= 4000
-        return 4000 * self.fishList[species].price
+        self.fishList[2].number -= 4000
+        self.fishList[5].number -= 4000
+        return 4000 * self.fishList[2].price + 4000 * self.fishList[5].price
       elif method == 5: #rod-and-reel
         if species == 6:
           self.fishList[2].number -= 1000
@@ -72,19 +71,29 @@ class State:
         newState.biodiversityIndex = self.biodiversityIndex
         newState.money = self.money
         newState.fishList = self.fishList
+        newState.event = self.event
         profit = newState.fishing_method(method, species)
-        for fish in newState.fishList:
-          fish.number = max(0, fish.number)
-          fish.number = min(10000, fish.number)
-
-          N += (fish.number)
-          nSum += fish.number * (fish.number - 1)
 
         # A flat rate of multiplying every three rounds and cap at a high num
         if (newState.roundsLeft % 3 == 1):
           for f in newState.fishList:
             f.reproduce()
         
+        for fish in newState.fishList:
+          fish.number = max(0, fish.number)
+          fish.number = min(10000, fish.number)
+
+          N += (fish.number)
+          nSum += fish.number * (fish.number - 1)
+        
+        if (newState.roundsLeft % 3 == 0):
+          newState.event = 1
+        else:
+          newState.event = 0
+
+        if newState.event == 1:
+          for f in newState.fishList:
+            f.number -= 1000
         #Ignore this block of code 
         #Calculation of Simpson's Diversity Index
         if N > 1:
@@ -110,6 +119,7 @@ class State:
         if self.biodiversityIndex != s2.biodiversityIndex: return False
         if self.roundsLeft != s2.roundsLeft: return False
         if self.fishList != s2.fishList: return False
+        if self.event != s2.event: return False
         return True
 
     def __str__(self):
@@ -119,6 +129,10 @@ class State:
       for fish in self.fishList:
         currentState += ', ' + fish.name +' left: '+str(fish.number)
       currentState += ')'
+      if self.event == 0:
+        currentState += '\nThere is no event occuring.'
+      elif self.event == 1:
+        currentState += '\nA factory had released tons of pollution into the ocean and all fish populations are decreased by 1000.'  
       return currentState
 
     def __hash__(self):
@@ -210,46 +224,38 @@ phi10 = Operator("Use purse seines to fish Tuna",
   lambda s: s.can_move(3, 1),
   lambda s: s.move(3, 1))
 
-phi11 = Operator("Use trawling to fish Cod",
-  lambda s: s.can_move(4, 2),
-  lambda s: s.move(4, 2))
-
-phi12 = Operator("Use trawling to fish Halibut",
-  lambda s: s.can_move(4, 5),
-  lambda s: s.move(4, 5))
-
-phi13 = Operator("Use trawling to fish Cod and Halibut",
+phi11 = Operator("Use trawling to fish Cod and Halibut",
   lambda s: s.can_move(4, 6),
   lambda s: s.move(4, 6))
 
-phi14 = Operator("Use rod and reel for Cod and Striped Bass",
+phi12 = Operator("Use rod and reel for Cod and Striped Bass",
   lambda s: s.can_move(5, 6),
   lambda s: s.move(5, 6))
 
-phi15 = Operator("Use rod and reel to fish for Salmon",
+phi13 = Operator("Use rod and reel to fish for Salmon",
   lambda s: s.can_move(5, 0),
   lambda s: s.move(5, 0))
 
-phi16 = Operator("Use rod and reel to fish for Tuna",
+phi14 = Operator("Use rod and reel to fish for Tuna",
   lambda s: s.can_move(5, 1),
   lambda s: s.move(5, 1))
   
-phi17 = Operator("Use rod and reel to fish for Cod",
+phi15 = Operator("Use rod and reel to fish for Cod",
   lambda s: s.can_move(5, 2),
   lambda s: s.move(5, 2))
 
-phi18 = Operator("Use rod and reel to fish for Pompano",
+phi16 = Operator("Use rod and reel to fish for Pompano",
   lambda s: s.can_move(5, 3),
   lambda s: s.move(5, 3))
 
-phi19 = Operator("Use rod and reel to fish for Striped Bass",
+phi17 = Operator("Use rod and reel to fish for Striped Bass",
   lambda s: s.can_move(5, 4),
     lambda s: s.move(5, 4))
 
-phi20 = Operator("Use rod and reel to fish for Halibut",
+phi18 = Operator("Use rod and reel to fish for Halibut",
   lambda s: s.can_move(5, 5),
   lambda s: s.move(5, 5))
 
 OPERATORS = [phi0, phi1, phi2, phi3, phi4, phi5, phi6, phi7, phi8, phi9, phi10, phi11, phi12,\
-   phi13, phi14, phi15, phi16, phi17, phi18, phi19, phi20]
+   phi13, phi14, phi15, phi16, phi17, phi18]
 #</OPERATORS>
