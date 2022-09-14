@@ -1,4 +1,4 @@
-#Dawson Harris & Anders Choy
+#Dawson H, Anders C, Ren C, Mason C, Will Z
 
 '''FishFrenzy_Array_VIS_FOR_TK.py
 Version of Sep. 13, 2022.
