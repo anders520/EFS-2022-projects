@@ -148,8 +148,6 @@ class State:
         divIndex = round(1 - (((6000 * 5999 * 6) + (10000 * 9999)) / (46000 * 45999)), 3)
         newState.biodiversityScore = round((newState.biodiversityIndex / divIndex) * 100, 1)
         newState.money += profit
-        for fish in self.fishList:
-          print(str(fish.number))
         return newState
 
     #def describe_state(self):
