@@ -203,7 +203,7 @@ Good Luck and Have Fun!'''
         currentState += '\nCongratulations, all fish have been killed by YOU... YOU LOST!!!'
         kill = True
       elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is \
-lower than 75, and you can only quit the game no...'
+lower than 75, and you can only quit the game now...'
       elif self.nothing == 4:
         currentState += '\nYou were fired for not fishing for multiple rounds!'
       elif self.event == 0:
