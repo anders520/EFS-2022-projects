@@ -67,55 +67,49 @@ def render_state(s):
         fishBars = int(fish.number / 1000)
         fishTotal += fish.number
         colorList = [salmonColor, tunaColor, codColor, pompanoColor, bassColor, halibutColor]
-        
-
-        #Vertical colors for margins
-        the_color_array[0][0] = blue
-        the_color_array[1][0] = blue
-        the_color_array[2][0] = blue
-        the_color_array[3][0] = blue
-        the_color_array[4][0] = blue
-        the_color_array[5][0] = blue
-        the_color_array[6][0] = blue
-        the_color_array[7][0] = blue
-        the_color_array[8][0] = blue
-        the_color_array[9][0] = blue
-        the_color_array[10][0] = blue
-
-        #Lables for the table to help the player know how many fish there are
-        the_string_array[0][0] = '10,000'
-        the_string_array[1][0] = '9,000'
-        the_string_array[2][0] = '8,000'
-        the_string_array[3][0] = '7,000'
-        the_string_array[4][0] = '6,000'
-        the_string_array[5][0] = '5,000'
-        the_string_array[6][0] = '4,000'
-        the_string_array[7][0] = '3,000'
-        the_string_array[8][0] = '2,000'
-        the_string_array[9][0] = '1,000'
-
-        #Horizontal colors for margins
-        the_color_array[10][1] = blue
-        the_color_array[10][2] = blue
-        the_color_array[10][3] = blue
-        the_color_array[10][4] = blue
-        the_color_array[10][5] = blue
-        the_color_array[10][6] = blue
-
-        #Fish Names in boxes at bottom of grid
-        the_string_array[10][1] = s.fishList[0].name +'\n' + str(s.fishList[0].number)
-        the_string_array[10][2] = s.fishList[1].name +'\n' + str(s.fishList[1].number)
-        the_string_array[10][3] = s.fishList[2].name +'\n' + str(s.fishList[2].number)
-        the_string_array[10][4] = s.fishList[3].name +'\n' + str(s.fishList[3].number)
-        the_string_array[10][5] = s.fishList[4].name +'\n' + str(s.fishList[4].number)
-        the_string_array[10][6] = s.fishList[5].name +'\n' + str(s.fishList[5].number)
-
-
         for i in range(fishBars):
             the_color_array[9 - i][j + 1] = colorList[j]
-            
-
         j+=1
+    #Vertical colors for margins
+    the_color_array[0][0] = blue
+    the_color_array[1][0] = blue
+    the_color_array[2][0] = blue
+    the_color_array[3][0] = blue
+    the_color_array[4][0] = blue
+    the_color_array[5][0] = blue
+    the_color_array[6][0] = blue
+    the_color_array[7][0] = blue
+    the_color_array[8][0] = blue
+    the_color_array[9][0] = blue
+    the_color_array[10][0] = blue
+
+    #Lables for the table to help the player know how many fish there are
+    the_string_array[0][0] = '10,000'
+    the_string_array[1][0] = '9,000'
+    the_string_array[2][0] = '8,000'
+    the_string_array[3][0] = '7,000'
+    the_string_array[4][0] = '6,000'
+    the_string_array[5][0] = '5,000'
+    the_string_array[6][0] = '4,000'
+    the_string_array[7][0] = '3,000'
+    the_string_array[8][0] = '2,000'
+    the_string_array[9][0] = '1,000'
+
+    #Horizontal colors for margins
+    the_color_array[10][1] = blue
+    the_color_array[10][2] = blue
+    the_color_array[10][3] = blue
+    the_color_array[10][4] = blue
+    the_color_array[10][5] = blue
+    the_color_array[10][6] = blue
+
+    #Fish Names in boxes at bottom of grid
+    the_string_array[10][1] = s.fishList[0].name +'\n' + str(s.fishList[0].number)
+    the_string_array[10][2] = s.fishList[1].name +'\n' + str(s.fishList[1].number)
+    the_string_array[10][3] = s.fishList[2].name +'\n' + str(s.fishList[2].number)
+    the_string_array[10][4] = s.fishList[3].name +'\n' + str(s.fishList[3].number)
+    the_string_array[10][5] = s.fishList[4].name +'\n' + str(s.fishList[4].number)
+    the_string_array[10][6] = s.fishList[5].name +'\n' + str(s.fishList[5].number)
 
 
     caption="Current state of the puzzle. Textual version: "+str(s)
