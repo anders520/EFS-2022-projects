@@ -194,7 +194,6 @@ class State:
       currentState += self.date()
       if self.roundsLeft == 20:
         currentState += '''
-
 Welcome to Fishing Frenzy! You are the new decision maker of WARMD Fishing Co.
 There are different fishing methods you can use to earn profit for the company. 
 Your goal is to earn as much as possible while keeping the ecosystem healthy meaning that your Biodiversity Score cannot drop below 75.
