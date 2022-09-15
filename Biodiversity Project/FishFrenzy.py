@@ -34,7 +34,8 @@ class State:
       self.biodiversityIndex = 0
       self.fishList = [self.salmon, self.tuna, self.cod, self.pompano, self.stripedBass, self.halibut]
       self.event = 0
-      self.bycatch = 0   
+      self.bycatch = 0
+      self.nothing = 0   
       if not old is None:
           self.biodiversityScore = old.biodiversityScore
           self.biodiversityIndex = old.biodiversityIndex
@@ -42,13 +43,12 @@ class State:
           self.roundsLeft = old.roundsLeft
           self.fishList = old.fishList
           self.event = old.event
-          self.bycatch = old.bycatch
-      #else:
-          
+          self.bycatch = old.bycatch 
+          self.nothing = old.nothing
 
 
     def can_move(self, method, species):
-      if self.biodiversityScore < 75: return False
+      if self.biodiversityScore < 75 or self.nothing >= 4: return False
       if method == 6: return True
       if species < 6:
         if method != 0 and self.fishList[species].number <= 0:
@@ -91,6 +91,7 @@ class State:
         self.fishList[species].number -= 1000
         return 1000 * self.fishList[species].price
       else: #if method == 0: do nothing 
+        self.nothing += 1
         return 0
         
 
@@ -100,12 +101,13 @@ class State:
         newState.roundsLeft = self.roundsLeft - 1
         N = 0
         nSum = 0
-        newState.biodiversityScore = self.biodiversityScore
-        newState.biodiversityIndex = self.biodiversityIndex
-        newState.money = self.money
-        newState.fishList = self.fishList
-        newState.event = self.event
-        newState.bycatch = self.bycatch
+        #newState.biodiversityScore = self.biodiversityScore
+        #newState.biodiversityIndex = self.biodiversityIndex
+        #newState.money = self.money
+        #newState.fishList = self.fishList
+        #newState.event = self.event
+        #newState.bycatch = self.bycatch
+        self.fishList = [Fish('Salmon', 750, self.fishList[0].number, 0.5), Fish('Tuna', 1200, self.fishList[1].number, 0.5), Fish('Cod', 75, self.fishList[2].number, 0.5), Fish('Pompano', 20, self.fishList[3].number, 0.5), Fish('Striped Bass', 480, self.fishList[4].number, 0.5), Fish('Halibut', 6000, self.fishList[5].number, 0.5)]
         profit = newState.fishing_method(method, species)
 
         # A flat rate of multiplying every three rounds and cap at a high num
@@ -146,6 +148,8 @@ class State:
         divIndex = round(1 - (((6000 * 5999 * 6) + (10000 * 9999)) / (46000 * 45999)), 3)
         newState.biodiversityScore = round((newState.biodiversityIndex / divIndex) * 100, 1)
         newState.money += profit
+        for fish in self.fishList:
+          print(str(fish.number))
         return newState
 
     #def describe_state(self):
@@ -204,6 +208,8 @@ Good Luck and Have Fun!
         kill = True
       elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is \
 lower than 75, and you can only quit the game...'
+      elif self.nothing == 4:
+        currentState += '\nYou were fired for not fishing for multiple rounds!'
       elif self.event == 0:
         currentState += '\nThere is no event occuring.'
       elif self.event == 1:

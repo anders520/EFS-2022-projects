@@ -118,7 +118,7 @@ def render_state(s):
         j+=1
 
 
-    caption="Current state of the puzzle. Textual version: "+str(s)   
+    caption="Current state of the puzzle. Textual version: "+str(s)
 
     the_state_array = state_array(color_array=the_color_array,
                                   string_array=the_string_array,
