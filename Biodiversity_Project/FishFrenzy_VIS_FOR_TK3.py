@@ -1,35 +1,27 @@
-#Dawson H, Anders C, Ren C, Mason C, Will Z
+'''Missionaries3_VIS_FOR_TK3.py
+Version of Sept. 17, 2019.
+This visualization file works with Missionaries3.py and
+Tk_SOLUZION_Client3.py.
+It uses three jpg images for showing missionaries, cannibals, and the boat.
 
-'''FishFrenzy_Array_VIS_FOR_TK.py
-Version of Sep. 13, 2022.
 '''
-
-from ast import operator
-from show_state_array import initialize_tk, state_array, state_display, STATE_WINDOW, test
-
 from tkinter import font
-from tkinter import *
-from tkinter import ttk
-import sys, importlib.util
-
-try:
-  spec = importlib.util.spec_from_file_location("FishFrenzy", "FishFrenzy"+".py")
-  PROBLEM = spec.loader.load_module()
-  spec.loader.exec_module(PROBLEM)
-except Exception as e:
-  print(e)
-  exit(1)
-
 
 myFont=None
 
-WIDTH = 580
-HEIGHT = 530
-TITLE = 'Fishing Frenzy'
+WIDTH = 590
+HEIGHT = 520
+TITLE = 'The Missionaries and Cannibals Puzzle'
 
+STATE_WINDOW = None
+STATE_ARRAY = None
 
-def initialize_vis():
-  initialize_tk(WIDTH, HEIGHT, TITLE)
+def initialize_vis(st_win, state_arr, initial_state):
+  global STATE_WINDOW, STATE_ARRAY
+  STATE_WINDOW = st_win
+  STATE_ARRAY = state_arr
+  STATE_WINDOW.winfo_toplevel().title(TITLE)
+  render_state(initial_state)
   
 def render_state(s):
     # Note that font creation is only allowed after the Tk root has been
@@ -116,27 +108,15 @@ def render_state(s):
 
     caption="Current state of the puzzle. Textual version: "+str(s)
 
-    the_state_array = state_array(color_array=the_color_array,
+    the_state_array = STATE_ARRAY(color_array=the_color_array,
                                   string_array=the_string_array,
                                   text_font=myFont,
                                   caption=caption)
     #print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
-    OPERATORS = []
-    for op in PROBLEM.OPERATORS:
-      if op.is_applicable(s):
-        OPERATORS.append(str(op.name))
-    def operate(choice, state):
-      choice = variable.get()
-      for i in range(len(PROBLEM.OPERATORS)):
-        if str(choice) == str(PROBLEM.OPERATORS[i].name):
-          state = PROBLEM.OPERATORS[i].apply(state)
-          return state
-          #break
-    variable = StringVar(STATE_WINDOW)
-    variable.set("Choose an action") # default value
+    
 
-    w = OptionMenu(STATE_WINDOW, variable, *OPERATORS, command=operate(variable.get(), s))
-    w.pack()
-    if fishTotal <= 0:
-        sys.exit()
+print("The FishFrenzy VIS file has been imported.")
+    
+
+    
