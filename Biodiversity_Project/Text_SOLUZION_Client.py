@@ -143,7 +143,7 @@ import sys, importlib.util
 # Get the PROBLEM name from the command-line arguments
 
 if len(sys.argv)<2:
-  problem_name = "Biodiversity Project\FishFrenzy" # Change this, e.g., for FarmerFox.
+  problem_name = "FishFrenzy" # Change this, e.g., for FarmerFox.
 #  
 #  print('''
 #       Usage: 

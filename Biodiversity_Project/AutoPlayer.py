@@ -8,7 +8,7 @@
     """
 
 # The following line is used in the Tk_SOLUZION_Client and the IDLE_Text_SOLUZION_Client.
-problem_name = 'Missionaries2'
+problem_name = 'FishFrenzy'
 policy_is_set = True  # Chance this to False if you want the player to prompt the user to set the mode.
 MODE = 0 # Default mode is random moves.
 

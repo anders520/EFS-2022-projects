@@ -101,12 +101,6 @@ class State:
         newState.roundsLeft = self.roundsLeft - 1
         N = 0
         nSum = 0
-        #newState.biodiversityScore = self.biodiversityScore
-        #newState.biodiversityIndex = self.biodiversityIndex
-        #newState.money = self.money
-        #newState.fishList = self.fishList
-        #newState.event = self.event
-        #newState.bycatch = self.bycatch
         self.fishList = [Fish('Salmon', 750, self.fishList[0].number, 0.5), Fish('Tuna', 1200, self.fishList[1].number, 0.5), Fish('Cod', 75, self.fishList[2].number, 0.5), Fish('Pompano', 20, self.fishList[3].number, 0.5), Fish('Striped Bass', 480, self.fishList[4].number, 0.5), Fish('Halibut', 6000, self.fishList[5].number, 0.5)]
         profit = newState.fishing_method(method, species)
 
@@ -188,8 +182,13 @@ class State:
       currentState = '(Gross Profit: '+ str(int(self.money / 1000.0)) + 'k'
       currentState += ', Biodiversity Index: '+str(self.biodiversityIndex)
       currentState += ', Biodiversity Score: '+str(self.biodiversityScore)
-      for fish in self.fishList:
-        currentState += ', \n' + fish.name +' left: '+str(fish.number)
+      for i in range(len(self.fishList)):
+        if (i % 3 == 0):
+          currentState += ', \n' + self.fishList[i].name +' left: '+str(self.fishList[i].number)
+        else:
+          currentState += ', ' + self.fishList[i].name +' left: '+str(self.fishList[i].number)
+      #for fish in self.fishList:
+        #currentState += ', \n' + fish.name +' left: '+str(fish.number)
       currentState += ', \nBycatch: '+str(self.bycatch)
       currentState += ')'
       currentState += self.date()
@@ -205,7 +204,7 @@ Good Luck and Have Fun!
         currentState += '\nCongratulations, all fish have been killed by YOU... YOU LOST!!!'
         kill = True
       elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is \
-lower than 75, and you can only quit the game...'
+lower than 75, and you can only quit the game no...'
       elif self.nothing == 4:
         currentState += '\nYou were fired for not fishing for multiple rounds!'
       elif self.event == 0:
@@ -226,6 +225,10 @@ lower than 75, and you can only quit the game...'
 
 def copy_state(s):
   return State(old=s)
+def goal_test(self):
+        if self.roundsLeft == 0:
+          return True
+        return False
 
 class Operator:
   def __init__(self, name, precond, state_transf):
