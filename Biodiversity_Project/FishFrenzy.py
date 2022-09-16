@@ -8,7 +8,7 @@ DESC = ""
 #</METADATA>
 
 #<COMMON_CODE>
-import sys
+
 class Fish:
   def __init__(self, name, price, number, repRate):
     self.name = name
@@ -48,7 +48,7 @@ class State:
 
 
     def can_move(self, method, species):
-      if self.biodiversityScore < 75 or self.nothing >= 4: return False
+      if self.biodiversityScore < 75 or self.nothing >= 4 or self.roundsLeft <= 0: return False
       if method == 6: return True
       if species < 6:
         if method != 0 and self.fishList[species].number <= 0:
@@ -212,6 +212,8 @@ lower than 75, and you can only quit the game now...'
       elif self.event == 2:
         currentState += '\nA hurricane caused runoff pollution and fish populations are decreased by 500'
       #if kill:
+        #winsound.PlaySound('explosin.wav', winsound.SND_FILENAME)
+        #kill = False
         #sys.exit(currentState)
       return currentState
 

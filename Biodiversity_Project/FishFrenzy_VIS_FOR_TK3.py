@@ -4,6 +4,7 @@ Version of Sept. 15, 2022.
 '''
 from tkinter import font
 from PIL import Image, ImageTk
+import winsound
 
 myFont=None
 
@@ -115,7 +116,8 @@ def render_state(s):
     STATE_WINDOW.winfo_toplevel().wm_iconphoto(False, photo)
     #print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
-    
+    if fishTotal <= 0:
+        winsound.PlaySound('explosin.wav', winsound.SND_FILENAME)
 
 print("The FishFrenzy VIS file has been imported.")
     
