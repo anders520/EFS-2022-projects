@@ -40,7 +40,7 @@ def render_state(s):
     codColor = (170, 255, 0)
     blue = (25, 25, 112)
 
-    row = [white]*7
+    row = ["ocean2.jpg"]*7
     the_color_array = [row]
     for i in range(10):
         the_color_array.append(row[:])
@@ -56,7 +56,7 @@ def render_state(s):
     for fish in s.fishList:
         fishBars = int(fish.number / 1000)
         fishTotal += fish.number
-        colorList = [salmonColor, tunaColor, codColor, pompanoColor, bassColor, halibutColor]
+        colorList = ["salmon.jpg", "tuna.jpg", "cod.jpg", "pompano.jpg", "stripedBass.jpg", "halibut.jpg"]
         for i in range(fishBars):
             the_color_array[9 - i][j + 1] = colorList[j]
         j+=1

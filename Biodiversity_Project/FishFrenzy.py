@@ -197,7 +197,7 @@ class State:
 Welcome to Fishing Frenzy! You are the new decision maker of WARMD Fishing Co.
 There are different fishing methods you can use to earn profit for the company. 
 Your goal is to earn as much as possible while keeping the ecosystem healthy meaning that your Biodiversity Score cannot drop below 75.
-Good Luck and Have Fun!'''
+Try to survive 5 years! Good Luck and Have Fun!'''
       if self.biodiversityScore == 0:
         currentState += '\nCongratulations, all fish have been killed by YOU... YOU LOST!!!'
         kill = True
