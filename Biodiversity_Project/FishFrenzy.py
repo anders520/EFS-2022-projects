@@ -59,7 +59,7 @@ class State:
       return True
     
     def fishing_method(self, method, species):
-      if method == 6:
+      if method == 6: #bomb fishing
         psum = 0
         for f in self.fishList:
           psum += f.number * f.price
@@ -198,7 +198,11 @@ Welcome to Fishing Frenzy! You are the new decision maker of WARMD Fishing Co.
 There are different fishing methods you can use to earn profit for the company. 
 Your goal is to earn as much as possible while keeping the ecosystem healthy meaning that your Biodiversity Score cannot drop below 75.
 Try to survive 5 years! Good Luck and Have Fun!'''
-      if self.biodiversityScore == 0:
+      if self.roundsLeft <= 0:
+        currentState += "Congratulations! It's been five years and thanks to you, the ocean is healthy."
+        if self.money > 60000000:
+          currentState +=" You have also earned over $60000k of profit for WARMD!"
+      elif self.biodiversityScore == 0:
         currentState += '\nCongratulations, all fish have been killed by YOU... YOU LOST!!!'
         kill = True
       elif self.biodiversityScore < 75: currentState += '\nYou have lost the game because your Biodiversity Score is \

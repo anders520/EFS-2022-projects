@@ -9,7 +9,7 @@ import winsound
 myFont=None
 
 WIDTH = 590
-HEIGHT = 520
+HEIGHT = 445
 TITLE = 'Fishing Frenzy'
 
 STATE_WINDOW = None

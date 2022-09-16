@@ -122,21 +122,3 @@ def render_state(s):
                                   caption=caption)
     #print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
-    OPERATORS = []
-    for op in PROBLEM.OPERATORS:
-      if op.is_applicable(s):
-        OPERATORS.append(str(op.name))
-    def operate(choice, state):
-      choice = variable.get()
-      for i in range(len(PROBLEM.OPERATORS)):
-        if str(choice) == str(PROBLEM.OPERATORS[i].name):
-          state = PROBLEM.OPERATORS[i].apply(state)
-          return state
-          #break
-    variable = StringVar(STATE_WINDOW)
-    variable.set("Choose an action") # default value
-
-    w = OptionMenu(STATE_WINDOW, variable, *OPERATORS, command=operate(variable.get(), s))
-    w.pack()
-    if fishTotal <= 0:
-        sys.exit()
