@@ -1,10 +1,9 @@
+
 '''FishFrenzy_VIS_FOR_TK3.py
 Version of Sept. 15, 2022.
-
 '''
 from tkinter import font
 from PIL import Image, ImageTk
-import winsound
 
 myFont=None
 
@@ -39,7 +38,6 @@ def render_state(s):
     pompanoColor = (255, 243, 128)
     codColor = (170, 255, 0)
     blue = (25, 25, 112)
-    
 
     row = [white]*7
     the_color_array = [row]
@@ -72,7 +70,7 @@ def render_state(s):
     the_color_array[7][0] = blue
     the_color_array[8][0] = blue
     the_color_array[9][0] = blue
-    the_color_array[10][0] = blue
+    the_color_array[10][0] = "WARMD_Logo.jpg"
 
     #Lables for the table to help the player know how many fish there are
     the_string_array[0][0] = '10,000'
@@ -111,13 +109,12 @@ def render_state(s):
                                   string_array=the_string_array,
                                   text_font=myFont,
                                   caption=caption)
-    ico = Image.open("fish_icon.ico")
+    ico = Image.open("fishfrenzyLogo.ico")
     photo = ImageTk.PhotoImage(ico)
     STATE_WINDOW.winfo_toplevel().wm_iconphoto(False, photo)
     #print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
-    if fishTotal <= 0:
-        winsound.PlaySound('explosin.wav', winsound.SND_FILENAME)
+    
 
 print("The FishFrenzy VIS file has been imported.")
     
