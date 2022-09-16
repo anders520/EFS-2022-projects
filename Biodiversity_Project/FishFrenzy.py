@@ -199,7 +199,7 @@ There are different fishing methods you can use to earn profit for the company.
 Your goal is to earn as much as possible while keeping the ecosystem healthy meaning that your Biodiversity Score cannot drop below 75.
 Try to survive 5 years! Good Luck and Have Fun!'''
       if self.roundsLeft <= 0:
-        currentState += "Congratulations! It's been five years and thanks to you, the ocean is healthy."
+        currentState += "\nCongratulations! It's been five years and thanks to you, the ocean is healthy."
         if self.money > 60000000:
           currentState +=" You have also earned over $60000k of profit for WARMD!"
       elif self.biodiversityScore == 0:
