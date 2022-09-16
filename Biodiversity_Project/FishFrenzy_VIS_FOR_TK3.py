@@ -1,17 +1,15 @@
-'''Missionaries3_VIS_FOR_TK3.py
-Version of Sept. 17, 2019.
-This visualization file works with Missionaries3.py and
-Tk_SOLUZION_Client3.py.
-It uses three jpg images for showing missionaries, cannibals, and the boat.
+'''FishFrenzy_VIS_FOR_TK3.py
+Version of Sept. 15, 2022.
 
 '''
 from tkinter import font
+from PIL import Image, ImageTk
 
 myFont=None
 
 WIDTH = 590
 HEIGHT = 520
-TITLE = 'The Missionaries and Cannibals Puzzle'
+TITLE = 'Fishing Frenzy'
 
 STATE_WINDOW = None
 STATE_ARRAY = None
@@ -112,6 +110,9 @@ def render_state(s):
                                   string_array=the_string_array,
                                   text_font=myFont,
                                   caption=caption)
+    ico = Image.open("fish_icon.ico")
+    photo = ImageTk.PhotoImage(ico)
+    STATE_WINDOW.winfo_toplevel().wm_iconphoto(False, photo)
     #print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
     
